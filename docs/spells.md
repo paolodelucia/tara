@@ -1,6 +1,6 @@
-# Spells: teach Friday a gesture in 5 seconds
+# Spells: teach Tara a gesture in 5 seconds
 
-Make any motion with Friday once, say what it means ("this means text Alex I'm
+Make any motion with Tara once, say what it means ("this means text Alex I'm
 running late"), and from then on that motion does it. No app, no training session,
 no menus. The model learns your gesture on the chip from a single example.
 
@@ -29,7 +29,7 @@ the template plus the action are saved to flash.
 
 **Cast:** do the motion. The screen draws the trail and the spell's name, then runs
 the action. Anything that sends, spends or deletes shows on screen and waits for a
-spoken "confirm" (the Friday rule).
+spoken "confirm" (the Tara rule).
 
 ## Milestones
 
@@ -71,7 +71,7 @@ Gestures are silent, so all of this works in the library.
 - [ ] Benchmark it against DTW: accuracy, false casts per hour, latency, power.
       That comparison is the write-up for a résumé or a post.
 - [ ] Hardware: design a wearable (a ring or a bracelet) in KiCad, with its own
-      battery. It also becomes the input method for the Friday phone.
+      battery. It also becomes the input method for the Tara phone.
 
 ## Risks
 
@@ -87,5 +87,5 @@ Gestures are silent, so all of this works in the library.
 
 1. **Form for the demo:** worn on the wrist like a watch, or held like a wand?
 2. **Confirm gesture:** should a dedicated "confirm" gesture count as confirmation,
-   instead of saying "confirm"? It would change the Friday rule, so it's your call.
+   instead of saying "confirm"? It would change the Tara rule, so it's your call.
 3. **Messaging for the demo:** Telegram, Discord, or something else?

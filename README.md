@@ -1,18 +1,26 @@
-# Friday
+# Tara
 
 A pocket voice assistant: hold a button, speak, and get Claude's answer spoken
 back and shown on a 1.8" AMOLED screen. The goal is a device you can carry instead
 of your phone for parts of the day.
 
 ```
-Friday (ESP32-S3)  --raw audio-->  server.py  -->  Whisper  -->  Claude  -->  Piper
-Friday             <--text + speech----------------------------------------'
+Tara (ESP32-S3)    --raw audio-->  server.py  -->  Whisper  -->  Claude  -->  Piper
+Tara               <--text + speech----------------------------------------'
 ```
 
 The device records, plays audio and shows text. Everything smart runs on the
 server, so it can improve without reflashing the board.
 
 **Status:** v0 works. Press, talk, and the answer comes back in about 2 seconds.
+
+**Now (Nov 2026):** the board runs as a **Muse charm** instead: Meta's open-source
+[Muse Gadgets SDK](https://github.com/facebookincubator/muse-gadget-sdk) firmware,
+talking to Paolo's Muse agent, Tara. Muse only sends gadgets text, so a small
+Cloud Run relay (Google Cloud Text-to-Speech, capped at 30,000 characters a day)
+gives the replies a voice. That firmware, its build scripts and the relay live
+outside this repo, in `..\muse-gadget-sdk` (branch `charm`) and `..\muse-flash`.
+The v0 code here stays as the Claude-based version.
 
 ## Hardware
 
@@ -24,7 +32,7 @@ server, so it can improve without reflashing the board.
 
 | Path | What |
 |---|---|
-| `firmware/friday_v0/` | Arduino sketch for the board (the `es8311` files are Espressif's codec driver, Apache-2.0) |
+| `firmware/tara_v0/` | Arduino sketch for the board (the `es8311` files are Espressif's codec driver, Apache-2.0) |
 | `server/` | Python server: Whisper, Claude, Piper |
 | `experiments/` | First ESP32 sketches: blink test and a Bluetooth "ghost keyboard" |
 
@@ -45,12 +53,12 @@ setx ANTHROPIC_API_KEY "sk-ant-..."
 
 Create the API key **inside a workspace** (Console > Settings > Workspaces). An
 organization-level key fails with "not scoped to a workspace". Alternatively, set
-`FRIDAY_WORKSPACE` to the workspace ID.
+`TARA_WORKSPACE` to the workspace ID.
 
 Open a **new** terminal (so it picks up the key), activate the venv, and run:
 
 ```bat
-set FRIDAY_MODEL=claude-sonnet-5-5
+set TARA_MODEL=claude-sonnet-5-5
 python server.py
 ```
 
@@ -60,8 +68,8 @@ It prints the address to put in the firmware. Test without the board:
 ### Firmware
 
 1. Install Waveshare's Arduino libraries from their repo (`examples/arduino-v2/libraries`).
-2. In `firmware/friday_v0/`, copy `secrets.example.h` to `secrets.h` and fill in your
-   networks: one `{ ssid, password, server }` line each. Friday joins the strongest one
+2. In `firmware/tara_v0/`, copy `secrets.example.h` to `secrets.h` and fill in your
+   networks: one `{ ssid, password, server }` line each. Tara joins the strongest one
    it knows. `secrets.h` is git-ignored, so your passwords stay out of the repo.
    The board needs 2.4 GHz Wi-Fi on the same network as the server.
 3. Tools: **ESP32S3 Dev Module**, USB CDC On Boot **Enabled**, Flash **16MB**,
@@ -74,8 +82,8 @@ Hold **BOOT**, speak, release.
 
 | Setting | Where | Default |
 |---|---|---|
-| Claude model | `FRIDAY_MODEL` env var | `claude-haiku-5-5` |
-| Whisper model | `FRIDAY_WHISPER` env var | `base.en` (`small.en` is more accurate) |
+| Claude model | `TARA_MODEL` env var | `claude-haiku-5-5` |
+| Whisper model | `TARA_WHISPER` env var | `base.en` (`small.en` is more accurate) |
 | Personality | `SYSTEM_PROMPT` in `server.py` | short, spoken answers |
 | Volume / mic gain | `VOLUME`, `MIC_GAIN` in the sketch | 85 / 3 |
 | Max recording | `MAX_SECONDS` in the sketch | 10 s |

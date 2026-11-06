@@ -111,7 +111,7 @@ def describe(samples):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Record gestures for Friday spells.")
+    ap = argparse.ArgumentParser(description="Record gestures for Tara spells.")
     ap.add_argument("label", help="name of the gesture you're recording, e.g. zed")
     ap.add_argument("--port", help="serial port, e.g. COM7 (found automatically if left out)")
     args = ap.parse_args()

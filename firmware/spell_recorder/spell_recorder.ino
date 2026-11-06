@@ -9,7 +9,7 @@
 //    END,<samples>,<ms>
 //  spells/recorder.py on the laptop plots and saves each recording.
 //
-//  Arduino settings: same as friday_v0 (ESP32S3 Dev Module, USB CDC On
+//  Arduino settings: same as tara_v0 (ESP32S3 Dev Module, USB CDC On
 //  Boot Enabled, Flash 16MB, OPI PSRAM).
 //  Libraries: SensorLib and Waveshare's arduino-v2 libraries.
 // =====================================================================

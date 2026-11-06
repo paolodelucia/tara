@@ -1,9 +1,9 @@
 // =====================================================================
-//  Friday v0 - the voice loop
+//  Tara v0 - the voice loop
 //  Board: Waveshare ESP32-S3-Touch-AMOLED-1.8 (V2: CO5300 display)
 //
 //  Hold the BOOT button, speak, release.
-//  The board sends your voice to the Friday server on your PC, which
+//  The board sends your voice to the Tara server on your PC, which
 //  transcribes it (Whisper), asks Claude, and sends back speech (Piper).
 //
 //  Arduino settings (Tools menu):
@@ -22,7 +22,7 @@
 #include "pin_config.h"
 #include "es8311.h"
 
-// Known networks. Friday scans, joins the strongest one it recognizes,
+// Known networks. Tara scans, joins the strongest one it recognizes,
 // and talks to that network's server address. The list lives in
 // secrets.h (not committed): copy secrets.example.h to secrets.h and edit it.
 struct KnownNetwork { const char* ssid; const char* pass; const char* server; };
@@ -253,7 +253,7 @@ void talkToServer(size_t monoBytes) {
 // Idle screen; keeps any Wi-Fi error visible instead of hiding it.
 void idleScreen() {
   if (WiFi.status() == WL_CONNECTED && serverUrl.length())
-    screen("Friday", C_ACCENT, "Hold BOOT and talk\n\non " + WiFi.SSID());
+    screen("Tara", C_ACCENT, "Hold BOOT and talk\n\non " + WiFi.SSID());
 }
 
 void setup() {
@@ -262,7 +262,7 @@ void setup() {
 
   gfx->begin();
   gfx->setBrightness(200);
-  screen("Friday", C_ACCENT, "starting up");
+  screen("Tara", C_ACCENT, "starting up");
 
   recBuf = (uint8_t*)ps_malloc(REC_BUF_BYTES);
   if (!recBuf) { screen("No PSRAM", C_REC, "Tools > PSRAM > OPI PSRAM"); while (true) delay(1000); }

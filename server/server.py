@@ -1,10 +1,10 @@
 """
-Friday v0 server - the voice loop.
+Tara v0 server - the voice loop.
 
-  friday (raw 16 kHz mono PCM)  ->  POST /talk
+  tara (raw 16 kHz mono PCM)  ->  POST /talk
       Whisper (speech to text)  ->  Claude  ->  Piper (text to speech)
-  friday  <-  "what you said\\nreply" + X-Audio-Id header
-  friday  ->  GET /audio/<id>  <-  raw 16 kHz mono PCM
+  tara  <-  "what you said\\nreply" + X-Audio-Id header
+  tara  ->  GET /audio/<id>  <-  raw 16 kHz mono PCM
 
 Run:  python server.py
 """
@@ -25,14 +25,14 @@ from piper import PiperVoice
 
 # ------------------------------------------------------------- settings
 SAMPLE_RATE = 16000
-WHISPER_MODEL = os.getenv("FRIDAY_WHISPER", "base.en")       # "small.en" = more accurate, slower
-CLAUDE_MODEL = os.getenv("FRIDAY_MODEL", "claude-haiku-5-5")  # fast and cheap; try claude-sonnet-5-5
-VOICE_PATH = os.getenv("FRIDAY_VOICE", "en_US-lessac-medium.onnx")
-PORT = int(os.getenv("FRIDAY_PORT", "8000"))
+WHISPER_MODEL = os.getenv("TARA_WHISPER", "base.en")       # "small.en" = more accurate, slower
+CLAUDE_MODEL = os.getenv("TARA_MODEL", "claude-haiku-5-5")  # fast and cheap; try claude-sonnet-5-5
+VOICE_PATH = os.getenv("TARA_VOICE", "en_US-lessac-medium.onnx")
+PORT = int(os.getenv("TARA_PORT", "8000"))
 MEMORY_EXCHANGES = 3        # remembers the last 3 back-and-forths
 MEMORY_TIMEOUT_S = 300      # ...and forgets after 5 quiet minutes
 
-SYSTEM_PROMPT = """You are Friday, a voice assistant living in a tiny pocket device \
+SYSTEM_PROMPT = """You are Tara, a voice assistant living in a tiny pocket device \
 with a small screen. Your reply is spoken aloud and shown on that screen.
 - Answer in one to three short sentences unless the user asks for more.
 - Plain spoken English only: no markdown, bullet points, emoji, or URLs.
@@ -45,8 +45,8 @@ stt = WhisperModel(WHISPER_MODEL, device="cpu", compute_type="int8")
 print(f"Loading voice ({VOICE_PATH})...")
 tts = PiperVoice.load(VOICE_PATH)
 # Reads ANTHROPIC_API_KEY. If your key isn't scoped to a workspace, also set
-# FRIDAY_WORKSPACE to the workspace ID (Console > Settings > Workspaces).
-_ws = os.getenv("FRIDAY_WORKSPACE")
+# TARA_WORKSPACE to the workspace ID (Console > Settings > Workspaces).
+_ws = os.getenv("TARA_WORKSPACE")
 claude = anthropic.Anthropic(default_headers={"anthropic-workspace-id": _ws} if _ws else None)
 
 app = FastAPI()
@@ -122,7 +122,7 @@ async def talk(request: Request):
     audio_id = uuid.uuid4().hex[:8]
     pending_audio[audio_id] = speak(reply)
     t3 = time.time()
-    print(f'\nYOU:  "{you}"\nFRIDAY: "{reply}"\n'
+    print(f'\nYOU:  "{you}"\nTARA: "{reply}"\n'
           f"      hear {t1 - t0:.1f}s | think {t2 - t1:.1f}s | speak {t3 - t2:.1f}s | "
           f"audio {len(pcm) / 2 / SAMPLE_RATE:.1f}s in")
     return Response(f"{screen_safe(you)}\n{screen_safe(reply)}",
@@ -152,5 +152,5 @@ def lan_ip() -> str:
 
 
 if __name__ == "__main__":
-    print(f'\nFriday server ready. In the firmware set:\n  SERVER = "http://{lan_ip()}:{PORT}"\n')
+    print(f'\nTara server ready. In the firmware set:\n  SERVER = "http://{lan_ip()}:{PORT}"\n')
     uvicorn.run(app, host="0.0.0.0", port=PORT, log_level="warning")

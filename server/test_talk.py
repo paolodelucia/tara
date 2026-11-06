@@ -1,6 +1,6 @@
 """
 Tests the server without the device: speaks a question with Piper,
-sends it to /talk, and saves Friday's spoken answer to reply.wav.
+sends it to /talk, and saves Tara's spoken answer to reply.wav.
 
 Run (with server.py running in another terminal):
     python test_talk.py "What is the capital of Italy?"
@@ -43,4 +43,4 @@ with urllib.request.urlopen(f"{SERVER}/audio/{audio_id}", timeout=60) as r:
 with wave.open("reply.wav", "wb") as wf:
     wf.setnchannels(1); wf.setsampwidth(2); wf.setframerate(16000)
     wf.writeframes(reply_pcm)
-print("Saved reply.wav - open it to hear Friday.")
+print("Saved reply.wav - open it to hear Tara.")
