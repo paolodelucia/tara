@@ -1,0 +1,10 @@
+# Our changes on top of Meta's profile for this board
+# (esp32/devices/sdkconfig.muse-waveshare-s3-18). build.sh appends this file to
+# the profile in its Linux copy, so Meta's SDK checkout stays untouched.
+
+# Muse doesn't speak replies to voice notes (they're text on screen). Live
+# calls would be spoken, but on this board they crash at boot (Nov 6, SDK
+# 463bd2a): once Wi-Fi is up, bsp_audio_init can't get internal DMA memory for
+# I2S ("allocate DMA buffer failed") and the board restarts in a loop. Only the
+# M5Stack StopWatch turns them on in Meta's profiles. Keep them off for now.
+CONFIG_MUSE_REALTIME_VOICE=n

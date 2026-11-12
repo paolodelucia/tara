@@ -1,42 +1,60 @@
 # Tara
 
-A pocket voice assistant: hold a button, speak, and get Claude's answer spoken
-back and shown on a 1.8" AMOLED screen. The goal is a device you can carry instead
-of your phone for parts of the day.
+A voice assistant you wear on a lanyard: a 1.8" AMOLED ESP32-S3 board in a
+3D-printed case with its own battery. Hold a button, speak, and the answer shows
+on screen and is spoken out loud. At home it snaps onto a magnetic wall dock to
+charge.
+
+<!-- Photos: the charm on the lanyard, docked on the wall, inside the case. -->
+
+**Now:** the board runs as a **Muse charm**: Meta's open-source
+[Muse gadget SDK](https://github.com/facebookincubator/muse-gadget-sdk) firmware,
+talking to my Muse agent, Tara, with a few changes of ours (spoken replies,
+campus Wi-Fi, a battery charge limit). **Before that** it was Tara v0, a
+Claude-based voice loop through a server on my laptop; that code is still here
+and still works.
+
+```
+Charm (ESP32-S3) --voice--> Muse --text--> Charm --text--> TTS relay (Cloud Run) --MP3--> Charm speaker
+```
+
+## What's in here
+
+| Path | What |
+|---|---|
+| [`case/`](case/) | The 3D-printed back cover (battery, magnets, keyring tab, speaker grille) and the magnetic wall dock: OpenSCAD source, STLs, print settings |
+| [`charm/`](charm/) | How to build and flash the Muse charm firmware, and the tools for it. The firmware changes are in the fork [paolodelucia/muse-gadget-sdk](https://github.com/paolodelucia/muse-gadget-sdk) (branch `charm`) |
+| [`relay/`](relay/) | The text-to-speech relay that gives replies a voice, with hard spending caps |
+| [`docs/`](docs/) | [Parts list](docs/parts-list.md), [build guide](docs/build-guide.md), [battery notes](docs/battery.md), the [room node plan](docs/room-node-plan.md), and [Spells](docs/spells.md) |
+| `firmware/tara_v0/`, `server/` | Tara v0: Arduino sketch plus a Python server (Whisper, Claude, Piper) |
+| `firmware/spell_recorder/`, `spells/` | Spells (paused): teach the board a gesture from one example, then cast it |
+| `experiments/` | First ESP32 sketches: blink and a Bluetooth "ghost keyboard" |
+
+## Hardware
+
+- [Waveshare ESP32-S3-Touch-AMOLED-1.8](https://www.waveshare.com/esp32-s3-touch-amoled-1.8.htm),
+  **V2** (CO5300 display, CST820 touch, ES8311 audio codec, mic and speaker, AXP2101
+  power chip)
+- 3.7 V 300 mAh LiPo (32 × 20 × 6 mm), magnets, M2 × 10 screws: see the
+  [parts list](docs/parts-list.md)
+
+## Security
+
+Anyone holding the charm can talk to it, so the agent behind it only gets
+**read and draft** access: it can read mail and write drafts, but has no tool
+that sends, spends or deletes. Cloud spending is capped at the source (see
+[relay/](relay/)). No secrets live in this repo: Wi-Fi passwords, tokens and
+the relay's URL stay in git-ignored files.
+
+## Tara v0 (Claude, the earlier version)
 
 ```
 Tara (ESP32-S3)    --raw audio-->  server.py  -->  Whisper  -->  Claude  -->  Piper
 Tara               <--text + speech----------------------------------------'
 ```
 
-The device records, plays audio and shows text. Everything smart runs on the
-server, so it can improve without reflashing the board.
-
-**Status:** v0 works. Press, talk, and the answer comes back in about 2 seconds.
-
-**Now (Nov 2026):** the board runs as a **Muse charm** instead: Meta's open-source
-[Muse Gadgets SDK](https://github.com/facebookincubator/muse-gadget-sdk) firmware,
-talking to Paolo's Muse agent, Tara. Muse only sends gadgets text, so a small
-Cloud Run relay (Google Cloud Text-to-Speech, capped at 30,000 characters a day)
-gives the replies a voice. That firmware, its build scripts and the relay live
-outside this repo, in `..\muse-gadget-sdk` (branch `charm`) and `..\muse-flash`.
-The v0 code here stays as the Claude-based version.
-
-## Hardware
-
-- [Waveshare ESP32-S3-Touch-AMOLED-1.8](https://www.waveshare.com/esp32-s3-touch-amoled-1.8.htm),
-  **V2** (CO5300 display, CST820 touch, ES8311 audio codec, mic and speaker)
-- USB-C cable. A battery is optional for now: 3.7V LiPo with an MX1.25 plug, max 3.85 x 24 x 28 mm.
-
-## Repo layout
-
-| Path | What |
-|---|---|
-| `firmware/tara_v0/` | Arduino sketch for the board (the `es8311` files are Espressif's codec driver, Apache-2.0) |
-| `server/` | Python server: Whisper, Claude, Piper |
-| `experiments/` | First ESP32 sketches: blink test and a Bluetooth "ghost keyboard" |
-
-## Setup
+The device records, plays audio and shows text; everything smart runs on the
+server. Press, talk, and the answer comes back in about 2 seconds.
 
 ### Server (Windows)
 
@@ -88,13 +106,16 @@ Hold **BOOT**, speak, release.
 | Volume / mic gain | `VOLUME`, `MIC_GAIN` in the sketch | 85 / 3 |
 | Max recording | `MAX_SECONDS` in the sketch | 10 s |
 
-## Roadmap
+## Next
 
-- **v1, useful:** note and to-do capture, a morning brief (Gmail and calendar),
-  weather and transit, streaming replies for speed.
-- **v1.5, pocketable:** raise-to-wake (IMU), deep sleep, battery, a nicer screen
-  user interface, and two ESP32 helper nodes (desk light and keyboard handoff, room
-  presence that triggers the morning brief).
-- **v2, phone-free:** server on a cloud VM, eduroam, an offline queue on the SD
-  card, an errand relay with confirmation.
-- **Later:** wake word, cellular, custom case.
+- A room node in the wall dock: temperature, humidity and desk presence, with a
+  dashboard, and the docked charm waking when you sit down ([plan](docs/room-node-plan.md)).
+- A vibration motor for notifications, and the v3 case (speaker grille position,
+  splash resistance).
+- Later: offline voice notes on the SD card, cellular.
+
+## License
+
+MIT for everything in this repo (see [LICENSE](LICENSE)), except Espressif's
+`es8311` codec driver in `firmware/tara_v0/` (Apache 2.0). The firmware fork is
+Apache 2.0, like Meta's SDK.

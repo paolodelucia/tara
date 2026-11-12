@@ -1,0 +1,4 @@
+# Shell scripts run in Linux (WSL): keep LF line endings on every checkout
+*.sh text eol=lf
+# STLs are generated from case/charm_case.scad
+*.stl -diff

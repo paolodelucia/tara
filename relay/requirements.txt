@@ -1,0 +1,5 @@
+flask
+gunicorn
+google-cloud-texttospeech
+google-cloud-firestore
+tzdata
