@@ -5,7 +5,9 @@ A voice assistant you wear on a lanyard: a 1.8" AMOLED ESP32-S3 board in a
 on screen and is spoken out loud. At home it snaps onto a magnetic wall dock to
 charge.
 
-<!-- Photos: the charm on the lanyard, docked on the wall, inside the case. -->
+<p align="center">
+  <img src="docs/images/charm-front.jpg" width="360" alt="The charm in its black 3D-printed case, keyring tab on top, screen showing the Muse avatar and READY">
+</p>
 
 **Now:** the board runs as a **Muse charm**: Meta's open-source
 [Muse gadget SDK](https://github.com/facebookincubator/muse-gadget-sdk) firmware,
@@ -37,6 +39,15 @@ Charm (ESP32-S3) --voice--> Muse --text--> Charm --text--> TTS relay (Cloud Run)
   power chip)
 - 3.7 V 300 mAh LiPo (32 × 20 × 6 mm), magnets, M2 × 10 screws: see the
   [parts list](docs/parts-list.md)
+
+## The build
+
+| 1. The board | 2. Battery in | 3. Case closed |
+|---|---|---|
+| <img src="docs/images/board-back.jpg" width="260" alt="Back of the Waveshare board in its front shell: header pins, speaker top right, BAT socket, MIC"> | <img src="docs/images/battery-fitted.jpg" width="260" alt="The 300 mAh LiPo sitting between the four brass screw posts, wired to the BAT socket"> | <img src="docs/images/case-back.jpg" width="260" alt="The printed black back cover: keyring tab, four M2 screws, speaker grille and mic hole"> |
+| The back of the Waveshare board in its stock front shell. The battery has to fit in the 33 × 22 mm between the four brass posts. | A 300 mAh LiPo wired to the BAT socket (charging capped at 100 mA in firmware). It sits on foam tape over the two hidden magnets. | The printed ABS back cover, held by four M2 × 10 screws. The keyring tab is part of the cover. [Print files](case/). |
+
+The full step-by-step is in the [build guide](docs/build-guide.md).
 
 ## Security
 

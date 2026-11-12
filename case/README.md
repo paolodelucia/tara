@@ -57,6 +57,13 @@ top). The STLs are exported from it:
     wrong spot. Fine for now; fix it in the next case (v3): measure the
     speaker's centre from two shell edges and update `SPEAKER_XY` (and check
     the grille still clears the battery strip and screw boss).
+  - **Likely cause (from the build photos):** the grille and mic hole are
+    mirrored left-right. Seen from behind, the board has its speaker top right
+    and its mic bottom right; the printed cover, seen from behind, has the
+    grille top left and the mic hole bottom left. The cover prints back face
+    down, so its outside is the model seen from below, which flips x. For v3,
+    try flipping the sign of x in `SPEAKER_XY` and `MIC_XY` first, then check
+    against the board.
 - **Ideas for v3:** splash resistance (gasket groove in the rim seat, inside
   recesses for stick-on acoustic vents over the grille and mic, a USB-C dust
   plug), and the grille fix above.
